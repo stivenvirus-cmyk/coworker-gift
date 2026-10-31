@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🎁 Подарок</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:Arial,Helvetica,sans-serif;color:#fff;
+  background:radial-gradient(circle at 50% 35%,#202a36 0,#0b1017 42%,#030507 100%);
+}
+.stage{position:relative;width:100%;height:100%;display:grid;place-items:center;overflow:hidden}
+.stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle,transparent 0 35%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.greeting{position:absolute;top:10%;text-align:center;z-index:2;padding:0 20px}
+.greeting h1{font-size:clamp(25px,6vw,46px);margin:0 0 10px;font-weight:800}
+.greeting p{margin:0;color:#aeb8c5;font-size:14px}
+.box-wrap{position:relative;width:min(330px,72vw);height:310px;display:grid;place-items:end center;cursor:pointer;z-index:5;transition:transform .25s}
+.box-wrap:hover{transform:scale(1.03)}
+.box{position:relative;width:220px;height:175px;margin-bottom:32px;filter:drop-shadow(0 25px 30px rgba(0,0,0,.6))}
+.box-body{
+ position:absolute;left:20px;right:20px;bottom:0;height:132px;
+ border-radius:4px 4px 12px 12px;
+ background:linear-gradient(100deg,#64121a,#a5222e 45%,#6f101a);
+ border:2px solid #c65b61;box-shadow:inset 0 0 25px rgba(0,0,0,.3);
+}
+.box-body:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:24px;transform:translateX(-50%);background:linear-gradient(90deg,#d9a83e,#ffe68a,#bd8320);opacity:.95}
+.lid{
+ position:absolute;left:5px;right:5px;top:25px;height:48px;border-radius:8px;
+ background:linear-gradient(100deg,#791620,#bb3039 45%,#7b1420);
+ border:2px solid #dc7277;box-shadow:0 9px 13px rgba(0,0,0,.35);z-index:4;
+ transform-origin:center bottom;transition:transform .55s cubic-bezier(.2,.9,.2,1);
+}
+.lid:after{content:"";position:absolute;left:50%;top:-1px;width:24px;height:48px;transform:translateX(-50%);background:linear-gradient(90deg,#d9a83e,#ffe68a,#bd8320)}
+.ribbon-v{position:absolute;z-index:6;left:50%;bottom:0;width:24px;height:132px;transform:translateX(-50%);background:linear-gradient(90deg,#d9a83e,#ffe68a,#bd8320);border-radius:0 0 4px 4px}
+.bow{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:7}
+.bow:before,.bow:after{content:"";position:absolute;width:55px;height:35px;background:#e3b23f;border:2px solid #ffe9a0;border-radius:70% 20% 70% 20%;top:-4px}
+.bow:before{right:4px;transform:rotate(25deg)}
+.bow:after{left:4px;transform:scaleX(-1) rotate(25deg)}
+.knot{position:absolute;width:25px;height:25px;background:#f3c957;border:2px solid #ffe9a0;border-radius:50%;left:50%;top:4px;transform:translateX(-50%)}
+.shadow{position:absolute;bottom:14px;width:270px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);filter:blur(9px)}
+.hint{position:absolute;bottom:8%;text-align:center;color:#d4dbe3;font-size:13px;letter-spacing:.03em;z-index:2}
+.hint b{color:#fff}
+#scare{
+ position:fixed;inset:0;z-index:100;display:none;place-items:center;
+ background:#000;overflow:hidden;
+}
+#scare.show{display:grid}
+.scare-img{
+ width:min(92vw,700px);height:min(92vh,700px);object-fit:cover;
+ border-radius:8px;box-shadow:0 0 80px rgba(255,0,0,.25);
+ transform:scale(.72);opacity:0;
+}
+#scare.show .scare-img{animation:pop .16s cubic-bezier(.1,.9,.2,1) forwards,shake .055s .16s infinite}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#scare.show .flash{animation:flash .18s ease-out}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+@keyframes shake{0%{transform:translate(0,0) scale(1.02) rotate(0)}25%{transform:translate(-11px,8px) scale(1.04) rotate(-1deg)}50%{transform:translate(10px,-7px) scale(1.03) rotate(1deg)}75%{transform:translate(-7px,-9px) scale(1.05) rotate(-.8deg)}100%{transform:translate(8px,7px) scale(1.02) rotate(.7deg)}}
+@keyframes flash{0%{opacity:.95}100%{opacity:0}}
+.shock-text{position:absolute;bottom:5%;left:0;right:0;text-align:center;font-size:clamp(20px,6vw,40px);font-weight:900;letter-spacing:.08em;text-shadow:0 3px 15px #000;opacity:0}
+#scare.show .shock-text{animation:text .3s .15s forwards}
+@keyframes text{to{opacity:1}}
+body.scaring .box-wrap{animation:boxshake .06s infinite}
+@keyframes boxshake{0%,100%{transform:translate(0)}50%{transform:translate(5px,-4px) rotate(.8deg)}}
+@media(max-width:520px){.box{transform:scale(.88)}.greeting{top:8%}.hint{bottom:6%}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="greeting">
+    <h1>🎁 Небольшой подарок</h1>
+    <p>Только для тебя. Нажми на коробку.</p>
+  </div>
+
+  <div class="box-wrap" id="gift" aria-label="Открыть подарок" role="button" tabindex="0">
+    <div class="shadow"></div>
+    <div class="box">
+      <div class="bow"><i class="knot"></i></div>
+      <div class="lid"></div>
+      <div class="box-body"></div>
+      <div class="ribbon-v"></div>
+    </div>
+  </div>
+
+  <div class="hint">Нажми на <b>коробку</b> — внутри сюрприз 👀</div>
+</div>
+
+<div id="scare" aria-hidden="true">
+  <div class="flash"></div>
+  <img class="scare-img" src="scare.jpg" alt="Сюрприз">
+  <div class="shock-text">😈 ПОПАЛСЯ!</div>
+</div>
+
+<script>
+const gift=document.getElementById('gift');
+const lid=document.querySelector('.lid');
+const scare=document.getElementById('scare');
+let done=false;
+
+function scream(){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return;
+  const ctx=new AC();
+  const now=ctx.currentTime;
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(.0001,now);
+  master.gain.exponentialRampToValueAtTime(.75,now+.025);
+  master.gain.exponentialRampToValueAtTime(.0001,now+1.35);
+  master.connect(ctx.destination);
+
+  const osc=ctx.createOscillator();
+  const g=ctx.createGain();
+  osc.type='sawtooth';
+  osc.frequency.setValueAtTime(115,now);
+  osc.frequency.exponentialRampToValueAtTime(1450,now+.42);
+  osc.frequency.exponentialRampToValueAtTime(310,now+1.2);
+  g.gain.setValueAtTime(.0001,now);
+  g.gain.exponentialRampToValueAtTime(.8,now+.04);
+  g.gain.exponentialRampToValueAtTime(.0001,now+1.3);
+  osc.connect(g);g.connect(master);osc.start(now);osc.stop(now+1.35);
+
+  const noise=ctx.createBufferSource();
+  const buffer=ctx.createBuffer(1,ctx.sampleRate*1.2,ctx.sampleRate);
+  const data=buffer.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,.25);
+  noise.buffer=buffer;
+  const ng=ctx.createGain();
+  ng.gain.setValueAtTime(.55,now);
+  ng.gain.exponentialRampToValueAtTime(.0001,now+1.15);
+  noise.connect(ng);ng.connect(master);noise.start(now);noise.stop(now+1.2);
+  setTimeout(()=>ctx.close(),1800);
+}
+
+function openGift(){
+  if(done)return;
+  done=true;
+  lid.style.transform='translateY(-55px) rotate(-9deg)';
+  document.body.classList.add('scaring');
+  setTimeout(()=>{
+    scare.classList.add('show');
+    scare.setAttribute('aria-hidden','false');
+    scream();
+    if(navigator.vibrate) navigator.vibrate([80,40,120,40,180]);
+  },480);
+}
+gift.addEventListener('click',openGift);
+gift.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGift()}});
+
+// Если коллега обновит страницу после сюрприза — снова получит подарок.
+</script>
+</body>
+</html>
