@@ -96,6 +96,7 @@ body.scaring .box-wrap{animation:boxshake .06s infinite}
 const gift=document.getElementById('gift');
 const lid=document.querySelector('.lid');
 const scare=document.getElementById('scare');
+const scareImg=document.querySelector('.scare-img');
 let done=false;
 
 function scream(){
@@ -138,6 +139,7 @@ function openGift(){
   lid.style.transform='translateY(-55px) rotate(-9deg)';
   document.body.classList.add('scaring');
   setTimeout(()=>{
+    scareImg.src=scareImg.dataset.src;
     scare.classList.add('show');
     scare.setAttribute('aria-hidden','false');
     scream();
