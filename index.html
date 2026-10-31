@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Небольшой подарок. Открой коробку.">\n<title>🎁 Подарок</title>
+<meta name="description" content="Небольшой подарок. Открой коробку."><meta name="robots" content="noimageindex"><title>🎁 Подарок</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden}
@@ -139,11 +139,19 @@ function openGift(){
   lid.style.transform='translateY(-55px) rotate(-9deg)';
   document.body.classList.add('scaring');
   setTimeout(()=>{
-    scareImg.src=scareImg.dataset.src;
-    scare.classList.add('show');
-    scare.setAttribute('aria-hidden','false');
-    scream();
-    if(navigator.vibrate) navigator.vibrate([80,40,120,40,180]);
+    scareImg.onload=()=>{
+      scare.classList.add('show');
+      scare.setAttribute('aria-hidden','false');
+      scream();
+      if(navigator.vibrate) navigator.vibrate([80,40,120,40,180]);
+    };
+    scareImg.onerror=()=>{
+      scare.classList.add('show');
+      scare.setAttribute('aria-hidden','false');
+      document.querySelector('.shock-text').textContent='😈 СЮРПРИЗ!';
+      scream();
+    };
+    scareImg.src=scareImg.dataset.src+'?v=3';
   },480);
 }
 gift.addEventListener('click',openGift);
